@@ -1,0 +1,13 @@
+{
+  "name": "cicd-demo-app",
+  "version": "1.0.0",
+  "description": "Demo app to practice Docker + Jenkins CI/CD pipeline",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"No tests yet - add later with jest/mocha\" && exit 0"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
