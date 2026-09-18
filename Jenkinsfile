@@ -75,13 +75,15 @@ pipeline {
             }
         }
 
-        stage('Cleanup Old Images') {
+                stage('Cleanup Old Images') {
             steps {
                 echo 'Cleaning up old Docker images to save space...'
                 sh '''
-                    # Purane saare tags (except latest) delete karo
+                    # 1. Purane saare tags delete karo (sirf latest rakho)
                     docker images "${IMAGE_NAME}" --format "{{.Repository}}:{{.Tag}}" | grep -v "latest" | xargs -r docker rmi -f || true
-                    # Dangling (faltu) images clean karo
+                    
+                    # 2. hello-world aur dangling (faltu) images clean karo
+                    docker rmi hello-world:latest || true
                     docker image prune -f || true
                 '''
             }
