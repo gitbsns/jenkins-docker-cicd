@@ -1,26 +1,11 @@
-// ============================================================
-// Jenkins Declarative Pipeline - Docker Build & Deploy
-//
-// Ye file exactly wo hai jo aap job mein "Build Now" dabate ho -
-// lekin yahan aap ise SAMAJH kar khud likh rahe ho.
-//
-// SETUP KARNE SE PEHLE (Jenkins mein karna hoga):
-// 1. Jenkins pe "Docker Pipeline" plugin install karo
-// 2. Manage Jenkins -> Credentials mein Docker Hub username/password
-//    add karo, ID rakho: "dockerhub-creds"
-// 3. Ye repo GitHub pe push karo, phir Jenkins mein
-//    "New Item" -> "Pipeline" -> "Pipeline script from SCM" select karo
-// ============================================================
-
 pipeline {
     agent any
 
     environment {
-        // Apna Docker Hub username yahan daalo
-        DOCKERHUB_USER = 'your-dockerhub-username'
-        IMAGE_NAME     = "${DOCKERHUB_USER}/cicd-demo-app"
-        // BUILD_NUMBER Jenkins khud provide karta hai - har build ka
-        // unique tag ban jata hai, "latest" pe depend nahi karna padta
+        // Tumhara Docker Hub username (Screenshot ke mutabiq)
+        DOCKERHUB_USER = 'abhdoc'
+        IMAGE_NAME     = "${DOCKERHUB_USER}/project1"
+        // Har build ka unique tag
         IMAGE_TAG      = "${BUILD_NUMBER}"
     }
 
@@ -28,24 +13,21 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                // GitHub se latest code khinch kar laata hai
                 echo 'Checking out source code from GitHub...'
+                // Ye step job configuration se GitHub creds use karega
                 checkout scm
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Install & Test') {
+            // Node.js ko host machine par install karne ki zaroorat nahi,
+            // hum ephemeral Docker container use karenge testing ke liye
+            agent {
+                docker { image 'node:20-alpine' }
+            }
             steps {
                 echo 'Installing npm dependencies...'
                 sh 'npm install'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                // Abhi test hollow hai - jab aap Jest/Mocha add karo,
-                // ye stage real tests chalayega aur fail hone par
-                // pipeline yahin ruk jayega (deploy nahi hoga)
                 echo 'Running tests...'
                 sh 'npm test'
             }
@@ -75,17 +57,23 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Pull Image') {
             steps {
-                // Simplest possible deploy: purana container hata kar
-                // naya image ke saath chalao. Real production mein
-                // ye stage Kubernetes "kubectl apply" ho sakta hai -
-                // wo Project 2 mein cover karenge.
+                echo 'Pulling the newly built image from Docker Hub...'
+                sh "docker pull ${IMAGE_NAME}:${IMAGE_TAG}"
+            }
+        }
+
+        stage('Deploy New Container') {
+            steps {
                 echo 'Deploying new container...'
                 sh '''
-                    docker stop cicd-demo-app || true
-                    docker rm cicd-demo-app || true
-                    docker run -d --name cicd-demo-app -p 3000:3000 \
+                    # Purana container band aur remove karo (agar exist karta hai)
+                    docker stop project1 || true
+                    docker rm project1 || true
+                    
+                    # Naya container run karo
+                    docker run -d --name project1 -p 3000:3000 \
                         -e BUILD_VERSION=${IMAGE_TAG} \
                         ${IMAGE_NAME}:${IMAGE_TAG}
                 '''
@@ -95,13 +83,12 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'Pipeline completed successfully! App is running on port 3000.'
         }
         failure {
             echo 'Pipeline failed - check the stage logs above.'
         }
         always {
-            // Docker login session clean karo
             sh 'docker logout || true'
         }
     }
