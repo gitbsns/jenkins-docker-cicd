@@ -10,7 +10,7 @@ const BUILD_VERSION = process.env.BUILD_VERSION || 'local-dev';
 
 app.get('/', (req, res) => {
   res.json({
-    message: 'Hello from the CI/CD demo app!',
+    message: 'Hello from the project1 CI/CD demo app!',
     build: BUILD_VERSION,
     timestamp: new Date().toISOString(),
   });
