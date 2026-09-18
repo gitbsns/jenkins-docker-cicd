@@ -19,15 +19,17 @@ pipeline {
             }
         }
 
-        stage('Install & Test') {
-            // Node.js ko host machine par install karne ki zaroorat nahi,
-            // hum ephemeral Docker container use karenge testing ke liye
+              stage('Install & Test') {
             agent {
-                docker { image 'node:20-alpine' }
+                docker {
+                    image 'node:20-alpine'
+                    // NPM ko workspace ke andar cache banane ki permission dena
+                    args '-e npm_config_cache=$WORKSPACE/.npm'
+                }
             }
             steps {
                 echo 'Installing npm dependencies...'
-                sh 'npm install'
+                sh 'npm install --cache .npm'
                 echo 'Running tests...'
                 sh 'npm test'
             }
