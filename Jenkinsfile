@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // Tumhara Docker Hub username (Screenshot ke mutabiq)
-        DOCKERHUB_USER = 'abhdoc'
+        DOCKERHUB_USER = 'ahbdoc'
         IMAGE_NAME     = "${DOCKERHUB_USER}/project1"
         // Har build ka unique tag
         IMAGE_TAG      = "${BUILD_NUMBER}"
