@@ -109,16 +109,16 @@ Click Build Now — and watch the stages you wrote run end to end. Every subsequ
 
 
 1. Jenkins Pipeline Success
-https://screenshots/jenkins-success.png
+https://github.com/gitbsns/jenkins-docker-cicd/blob/main/screenshots/jenkins%20pipeline.png
 
 2. Docker Hub Repository (Pushed Images)
-https://screenshots/dockerhub.png
+https://github.com/gitbsns/jenkins-docker-cicd/blob/main/screenshots/dockerhub.png
 
 3. Ngrok Traffic Inspector (Webhook 200 OK)
-https://screenshots/ngrok-traffic.png
+https://github.com/gitbsns/jenkins-docker-cicd/blob/main/screenshots/ngrok-WH.png
 
 4. Live Application on Port 3000
-https://screenshots/app-running.png
+https://github.com/gitbsns/jenkins-docker-cicd/blob/main/screenshots/application.png
 
 What this demonstrates
 Understanding of Docker layer caching and image optimization
