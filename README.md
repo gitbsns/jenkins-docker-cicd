@@ -104,3 +104,33 @@ In your Jenkins job configuration, under Build Triggers, check "GitHub hook trig
 Update DOCKERHUB_USER in the Jenkinsfile to your own Docker Hub username.
 
 Click Build Now — and watch the stages you wrote run end to end. Every subsequent git push will now trigger the pipeline automatically.
+
+📸 Project Screenshots
+
+
+1. Jenkins Pipeline Success
+https://screenshots/jenkins-success.png
+
+2. Docker Hub Repository (Pushed Images)
+https://screenshots/dockerhub.png
+
+3. Ngrok Traffic Inspector (Webhook 200 OK)
+https://screenshots/ngrok-traffic.png
+
+4. Live Application on Port 3000
+https://screenshots/app-running.png
+
+What this demonstrates
+Understanding of Docker layer caching and image optimization
+
+Writing a multi-stage Jenkins Declarative Pipeline from scratch
+
+Secure credential handling in CI/CD (withCredentials)
+
+Automated build → test gate → registry push → deploy flow
+
+Basic troubleshooting of container lifecycle (stop/remove/redeploy)
+
+Setting up automated webhooks using ngrok for local development environments
+
+Implementing automated cleanup of Docker images to optimize disk space
