@@ -1,27 +1,34 @@
-// Simple demo app — CI/CD pipeline ka "product" yehi hai.
-// Iska kaam sirf itna hai: run ho, aur bata de ke ye kaunsa version/build hai.
-// Isse hum pipeline ke end-to-end flow (build -> image -> deploy) ko test kar sakte hain.
-
 const express = require('express');
 const app = express();
+const port = process.env.APP_PORT || 3000;
 
-const PORT = process.env.PORT || 3000;
-const BUILD_VERSION = process.env.BUILD_VERSION || 'local-dev';
+// ConfigMap se aane wale values
+const appName = process.env.APP_NAME || 'MyApp';
+const appEnv = process.env.APP_ENV || 'development';
+const logLevel = process.env.LOG_LEVEL || 'info';
+
+// Secret se aane wali values (masked rakhenge)
+const hasSessionSecret = !!process.env.SESSION_SECRET;
 
 app.get('/', (req, res) => {
-  res.json({
-    message: 'Hello from the CI/CD demo app!',
-    build: BUILD_VERSION,
-    timestamp: new Date().toISOString(),
-  });
+    res.send(`Hello DevOps! ${appName} is running successfully in ${appEnv} mode.`);
 });
 
-// Health check endpoint - Kubernetes liveness/readiness probes isi tarah ka
-// endpoint use karte hain, isliye abhi se practice karna useful hai.
+app.get('/info', (req, res) => {
+    res.json({
+        app: appName,
+        environment: appEnv,
+        logLevel: logLevel,
+        sessionSecretLoaded: hasSessionSecret,
+        pod: process.env.HOSTNAME || 'unknown',
+        port: port
+    });
+});
+
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'healthy' });
+    res.status(200).json({ status: 'healthy' });
 });
 
-app.listen(PORT, () => {
-  console.log(`App running on port ${PORT}, build version: ${BUILD_VERSION}`);
+app.listen(port, '0.0.0.0', () => {
+    console.log(`[${logLevel.toUpperCase()}] ${appName} running on port ${port} in ${appEnv} mode`);
 });
