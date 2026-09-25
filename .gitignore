@@ -1,0 +1,17 @@
+# Secrets - kabhi commit nahi honi chahiye
+secret.yaml
+*.env
+.env
+
+# Local/dev junk
+node_modules/
+.npm/
+npm-debug.log
+
+# Accidental local files (jo iss project mein commit ho gayi thi)
+ngrok link
+test
+
+# Editor/OS junk
+.DS_Store
+.vscode/
