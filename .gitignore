@@ -15,3 +15,23 @@ test
 # Editor/OS junk
 .DS_Store
 .vscode/
+
+# Kubernetes credentials (kabhi commit nahi)
+sa-token.txt
+ca.crt
+jenkins-kubeconfig.yaml
+secret.yaml
+
+# Junk files
+ngrok link
+test
+
+# Kubernetes credentials (kabhi commit nahi)
+sa-token.txt
+ca.crt
+jenkins-kubeconfig.yaml
+secret.yaml
+
+# Junk files
+ngrok link
+test
